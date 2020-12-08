@@ -1,0 +1,4 @@
+#bionic64 ansible_ssh_host=127.0.0.1 ansible_ssh_user=root ansible_ssh_pass=vagrant
+centos6 ansible_ssh_host=192.168.56.1 ansible_port=2225 ansible_ssh_user=vagrant ansible_ssh_private_key_file=../centos6_private_key ansible_become=true
+centos7 ansible_ssh_host=192.168.56.1 ansible_port=2223 ansible_ssh_user=vagrant ansible_ssh_private_key_file=../centos7_private_key ansible_become=true
+solaris10 ansible_ssh_host=192.168.56.1 ansible_port=2224 ansible_ssh_user=vagrant ansible_ssh_private_key_file=../solaris10_private_key ansible_become=true ansible_ssh_common_args="-o KexAlgorithms=+diffie-hellman-group1-sha1"

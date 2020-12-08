@@ -1,0 +1,51 @@
+---
+
+- name: "remote tasks"
+  hosts: "{{ hostname }}"
+  vars: 
+     tmp_dir: "/tmp/{{ ansible_hostname }}-{{ ansible_date_time.date }}"
+     remote_script_dir: "/tmp/ansible-scripts"
+  tasks:
+ 
+   - name: create temporary directory
+     file: 
+       path: "{{ item }}"
+       state: directory
+     with_items:
+          - "{{ remote_script_dir }}"
+   
+   - name: copy script to remote hosts
+     copy: 
+      src: "{{ item }}"
+      dest: "{{ remote_script_dir }}"
+      mode: +x
+     with_items:
+          - "{{ script_dir }}/harden_run.pl"
+          - "{{ script_dir }}/{{ config_name }}"
+        
+   - name: run harden script
+     shell: cd "{{ remote_script_dir }}" ; ./harden_run.pl -c={{ config_name }} -e
+     register: hdout
+  
+   - debug: var=hdout.stdout_lines
+
+#   - name: remove remote script
+#     file:
+#      path: "{{ item }}"
+#      state: absent
+#     with_items:
+#          - "{{ remote_script_dir }}/harden_run.pl"
+#          - "{{ remote_script_dir }}/{{ config_name }}"
+
+#- name: "local task"
+#  hosts: localhost
+#  tasks:
+#    
+#   - name: remove local file
+#     file:
+#      path: "{{ item }}"
+#      state: absent
+#     with_items:
+#          - "{{ script_dir }}/{{ config_name }}"
+
+...
