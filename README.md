@@ -1,7 +1,8 @@
 hardening
 =========
 
-Lite script 'harden_run.pl' ini digunakan untuk partial hardening point-point berikut:
+Lite script `harden_run.pl` ini digunakan untuk partial hardening point-point berikut:
+
 RHEL6,RHEL7:
   - Add Banner
   - PAM Configuration
@@ -27,32 +28,39 @@ Script Variables
 ----------------
 
 Script menggunakan control file dengan format seperti berikut:
+
 ```
 #name;command_to_check;parameters
 D.6.1.9. Ensure SSH Banner file is configured;grep "^Banner" /etc/ssh/sshd_config;$sshd_parameters{"Banner "}="/etc/issue"
 ```
-pada dasarnya di control menggunakan parameters yang sebenarnya adalah variabel hashes atau associative arrays Perl dari masing-masing fungsi hardening nya sebagai berikut:
+
+Pada dasarnya di control menggunakan parameters yang sebenarnya adalah variabel hashes atau associative arrays Perl dari masing-masing fungsi hardening nya sebagai berikut:
  - Add Banner: 
    $banner_msg{"path_file_banner"}="text_isi_banner", contoh: $banner_msg{"/etc/issue"}="Wellcome"
+   
  - PAM Configuration: 
    $pam_cfg{"path_config_file"}{"key"}=" value", contoh: $pam_cfg{"/etc/pam.d/password-auth"}{"password    sufficient    pam_unix.so"}=" sha512 remember=5"
    konsepnya:
    parameter "key" adalah suatu kata tertentu yang akan dicari dan di hapus didalam file "path_config_file"
    misalkan: sebelumnya parameter "key" = 'password    sufficient    pam_unix.so' didalam file  "/etc/pam.d/system-auth" adalah :
-   ```
+
+```
 [root@centos7 ansible-scripts]# grep "password    sufficient    pam_unix.so" /etc/pam.d/system-auth
 password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok
 [root@centos7 ansible-scripts]#
-   ```
+```
    kemudian parameter "value" = '  sha512 remember=5', setelah script dijalankan baris yang mengandung parameter "key" akan dihapus, lalu diganti dengan baris baru paling bawah berisi parameter "key"+"value", sehingga menjadi sebagai berikut:
-   ```
+
+```
 [root@centos7 ansible-scripts]# grep "password    sufficient    pam_unix.so" /etc/pam.d/system-auth
 password    sufficient    pam_unix.so sha512 remember=5
 [root@centos7 ansible-scripts]#
-   ``` 
+``` 
+
   - Shadow Configuration:
     $user_cfg{"key"}="value", contoh: $user_cfg{"PASS_MIN_LEN"}="   8"
     konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file '/etc/login.defs'
+    
   - SSH Configuration:
     $sshd_parameters{"key"}="value", contoh: $sshd_parameters{MaxAuthTries}=5
     konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file '/etc/ssh/sshd_config'
@@ -67,6 +75,7 @@ Example Usage
 -------------
 
 Berikut option-option yang ada pada script ini :
+
 ```
 [root@centos7 ansible-scripts]# ./harden_run.pl
 Usage:  <option>
@@ -81,6 +90,7 @@ Option:
 ```
 
 Menjalankan hardening (menggunakan Ansible):
+
 ```
 doni@LAPTOP-OPP19HPH:~/Scripts/hardening$ ansible-playbook -i hosts hardening.yml -e @vars.yml -e 'hostname=solaris10 config_name=harden_ctl_sol.conf'
 
@@ -142,6 +152,7 @@ doni@LAPTOP-OPP19HPH:~/Scripts/hardening$
 ```
 
 Menjalankan hardening :
+
 ```
 [root@centos7 ansible-scripts]# ./harden_run.pl -c=harden_ctl_el7.conf -e
 run_command:/bin/uname -s
@@ -191,6 +202,7 @@ run_command:/bin/systemctl reload sshd
 ```
 
 Menjalankan Rollback ke state sebelum Hardening saat ini:
+
 ```
 [root@centos7 ansible-scripts]# ./harden_run.pl -c=harden_ctl_el7.conf -e -r
 run_command:/bin/uname -s
