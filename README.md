@@ -22,7 +22,7 @@ Requirements
 
 Script ini telah dicoba pada environtment Perl 5 di RHEL6, RHEL7, dan SOLARIS10 tanpa installasi modul tambahan atau hanya menggunakan modul ad-hoc/bawaan Perl 5.
 Membutuhkan priviledge Admin untuk menjalankannya.
-Script akan membuat direktori '/etc/nmc_backup' untuk menyimpan file konfigurasi sebelum dilakukan perubahan, fungsi rollback membutuhkan file yang berada pada directory ini.
+Script akan membuat direktori `/etc/nmc_backup` untuk menyimpan file konfigurasi sebelum dilakukan perubahan, fungsi rollback membutuhkan file yang berada pada directory ini.
 
 Script Variables
 ----------------
@@ -36,10 +36,10 @@ D.6.1.9. Ensure SSH Banner file is configured;grep "^Banner" /etc/ssh/sshd_confi
 
 Pada dasarnya di control menggunakan parameters yang sebenarnya adalah variabel hashes atau associative arrays Perl dari masing-masing fungsi hardening nya sebagai berikut:
  - Add Banner: 
-   $banner_msg{"path_file_banner"}="text_isi_banner", contoh: $banner_msg{"/etc/issue"}="Wellcome"
+   $banner_msg{"path_file_banner"}="text_isi_banner", contoh: $banner_msg{"/etc/issue"}="Wellcome".
    
  - PAM Configuration: 
-   $pam_cfg{"path_config_file"}{"key"}=" value", contoh: $pam_cfg{"/etc/pam.d/password-auth"}{"password    sufficient    pam_unix.so"}=" sha512 remember=5"
+   $pam_cfg{"path_config_file"}{"key"}=" value", contoh: $pam_cfg{"/etc/pam.d/password-auth"}{"password    sufficient    pam_unix.so"}=" sha512 remember=5".
    konsepnya:
    parameter "key" adalah suatu kata tertentu yang akan dicari dan di hapus didalam file "path_config_file"
    misalkan: sebelumnya parameter "key" = 'password    sufficient    pam_unix.so' didalam file  "/etc/pam.d/system-auth" adalah :
@@ -58,12 +58,12 @@ password    sufficient    pam_unix.so sha512 remember=5
 ``` 
 
   - Shadow Configuration:
-    $user_cfg{"key"}="value", contoh: $user_cfg{"PASS_MIN_LEN"}="   8"
-    konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file '/etc/login.defs'
+    $user_cfg{"key"}="value", contoh: $user_cfg{"PASS_MIN_LEN"}="   8".
+    Konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file `/etc/login.defs`
     
   - SSH Configuration:
-    $sshd_parameters{"key"}="value", contoh: $sshd_parameters{MaxAuthTries}=5
-    konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file '/etc/ssh/sshd_config'
+    $sshd_parameters{"key"}="value", contoh: $sshd_parameters{MaxAuthTries}=5.
+    Konsep merubah file konfigurasinya sama seperti PAM Configuration, hanya saja cuma bisa digunakan untuk memodifikasi file `/etc/ssh/sshd_config`
    
 Dependencies
 ------------
